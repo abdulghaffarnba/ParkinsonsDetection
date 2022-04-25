@@ -6,7 +6,7 @@ import sklearn
 import numpy as np
 import pandas as pd
 from parselmouth.praat import call
-from flask import Flask, request, jsonify, url_for
+from flask import Flask, request, jsonify, url_for, redirect, send_file
 from flask_cors import CORS, cross_origin
 from skimage import feature
 from sklearn.preprocessing import MinMaxScaler
@@ -134,7 +134,7 @@ def imageFeatureExtraction(image):
 # Pre-processing and predicting the spiral image
 def spiralPredictionProcess(model, imagePath):
     image = cv2.imread(imagePath)
-    output = image.copy()
+    output = image.copy() 
     output = cv2.resize(output, (128, 128))
     # Pre-process the image
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -166,7 +166,14 @@ def questionnaire():
 @app.route('/voice', methods=["POST"])
 def voice():
     # todo >>>>>> get audio from the request and pass to "sound" below
-    sound = parselmouth.Sound("C:/Users/Abdul Ghaffar/Downloads/Music/healthy01New.wav")
+    if "file" not in request.files:
+        return redirect(request.url)
+
+    audioFile = request.files["file"]
+    if audioFile.filename == "":
+        return redirect(request.url)
+    
+    sound = parselmouth.Sound(audioFile)
     (localJitter, localabsoluteJitter, rapJitter, ppq5Jitter, ddpJitter, localShimmer, localdbShimmer, apq3Shimmer, aqpq5Shimmer, apq11Shimmer, ddaShimmer, hnr05, hnr15 ,hnr25) = measurePitch(sound, 75, 1000, "Hertz")
     localJitter_list.append(localJitter) # make a mean F0 list
     localabsoluteJitter_list.append(localabsoluteJitter) # make a sd F0 list
@@ -184,8 +191,8 @@ def voice():
     hnr25_list.append(hnr25)
 
     # Loading the Model
-    with open("D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/Audio/VoiceModel.pkl", 'rb') as file:  
-        model = pickle.load(file)
+    with open("D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/Audio/VoiceModel.pkl", 'rb') as audioFile:  
+        model = pickle.load(audioFile)
 
     input_data = (roundOffInputValues(localJitter_list[0]), roundOffInputValues(localabsoluteJitter_list[0]), roundOffInputValues(rapJitter_list[0]), roundOffInputValues(ppq5Jitter_list[0]), roundOffInputValues(ddpJitter_list[0]), roundOffInputValues(localShimmer_list[0]), roundOffInputValues(localdbShimmer_list[0]), roundOffInputValues(apq3Shimmer_list[0]), roundOffInputValues(aqpq5Shimmer_list[0]), roundOffInputValues(apq11Shimmer_list[0]), roundOffInputValues(ddaShimmer_list[0]), roundOffInputValues(hnr05_list[0]), roundOffInputValues(hnr15_list[0]), roundOffInputValues(hnr25_list[0]))
     
@@ -214,7 +221,9 @@ def spiral():
     with open("D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/SpiralDrawing/SpiralModel.pkl", 'rb') as file:  
         model = pickle.load(file)
     # todo >>>>>> get image from the request and pass to "prediction" below
-    prediction = spiralPredictionProcess(model, "D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/SpiralDrawing/testing_parkinsons.png")
+    imagefile = request.files.get('imagefile', '')
+
+    prediction = spiralPredictionProcess(model, imagefile)
     spiralResult.append(prediction)
 
     return jsonify({"Endpoint" : "/result"})
@@ -223,7 +232,9 @@ def spiral():
 @app.route('/result', methods=["GET"])
 def result():
     # todo >>>>>> create PDF as report
-    return ''
+    fileName = 'ParkD_Result.pdf'
+    with open(fileName, 'rb') as resultFile:
+        return send_file(resultFile, attachment_filename=fileName)
 
 if __name__ == '__main__':
     app.run()
