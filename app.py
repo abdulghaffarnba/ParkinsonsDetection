@@ -10,6 +10,10 @@ from flask import Flask, request, jsonify, url_for, redirect, send_file
 from flask_cors import CORS, cross_origin
 from skimage import feature
 from sklearn.preprocessing import MinMaxScaler
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.lib import colors
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -233,6 +237,134 @@ def spiral():
 def result():
     # todo >>>>>> create PDF as report
     fileName = 'ParkD_Result.pdf'
+    documentTitle = 'Result'
+    title = 'ParkD'
+    titleDefinition = "Detecting Parkinson's Disease using vocal measurement and spiral hand drawing"
+
+    questionnaireTitle = 'Questionnaire Result'
+    voiceTitle = 'Voice Detection Result'
+    spiralResult = 'Spiral Detection Result'
+    questionnaireTextLines = [
+        'Do you have any slow movement in your limbs, face, walking, or overall body?                                                               No',
+        'Do you have a tremor, or shaking, in one of your limbs, most commonly your hand or fingers?                                                No',
+        'Do you have muscle stiffness that is both unpleasant and limits your range of motion?                                                      No',
+        'Do you find yourself losing your sense of balance?                                                                                         No',
+        'Have you noticed a lack of automatic movements such as blinking, smiling, or swinging your arms as you walk?                               No',
+        'Do you have a problem with your sense of smell                                                                                             No',
+        'Do you have difficulties sleeping and find yourself thrashing around in bed or acting out nightmares while you are deeply asleep?          No',
+        'Have others commented on how soft your voice is or how hoarse you sound?                                                                   No',
+        'Have you ever been told that you have a serious, depressed, or enraged expression on your face, even when you are not upset?               No',
+        'Do you find yourself feeling dizzy when you get out of a seat?                                                                             No'
+    ]
+
+    voiceTextLines = [
+        'Jitter Local                                                0',
+        'Jitter (Abs)                                                0',
+        'Jitter RAP                                                  0',
+        'Jitter PPQ5                                                 0',
+        'Jitter DDP                                                  0',
+        'Shimmer local                                               0',
+        'Shimmer local db                                            0',
+        'Shimmer apq3                                                0',
+        'Shimmer aqpq5                                               0',
+        'Shimmer aqpq11                                              0',
+        'Shimmer DDA                                                 0',
+        'HNR 05                                                      0',
+        'HNR 15                                                      0',
+        'HNR 25                                                      0'
+    ]
+
+    image = 'D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/SpiralDrawing/testing_parkinsons.png'
+
+    # creating a pdf object
+    pdf = canvas.Canvas(fileName)
+    
+    # setting the title of the document
+    pdf.setTitle(documentTitle)
+
+    # Page 1
+    pdf.setFillColorRGB(0.58,0.10,0.00)
+    pdf.setFont("Courier-BoldOblique", 20)
+    pdf.drawCentredString(300, 800, title)
+
+    pdf.setFillColor(colors.black)
+    pdf.setFont("Courier", 10)
+    pdf.drawString(80, 770, titleDefinition)
+
+    pdf.setFont("Times-Bold", 10)
+    pdf.drawString(40, 740, questionnaireTitle)
+
+    text = pdf.beginText(40, 720)
+    text.setFont("Courier", 6)
+    text.setFillColor(colors.black)
+    text.leading = 24
+    for line in questionnaireTextLines:
+        text.textLine(line)
+        text.textLine("")
+    pdf.drawText(text)
+
+    pdf.setFont("Courier-BoldOblique", 8)
+    pdf.drawString(40, 570, "Findings")
+
+    percent = 0
+    pdf.setFont("Courier", 6)
+    pdf.drawString(40, 560, f"{percent}% has been detected from the questionnaire")
+    pdf.showPage()
+
+    # Page 2
+    pdf.setFillColorRGB(0.58,0.10,0.00)
+    pdf.setFont("Courier-BoldOblique", 20)
+    pdf.drawCentredString(300, 800, title)
+
+    pdf.setFillColor(colors.black)
+    pdf.setFont("Courier", 10)
+    pdf.drawString(80, 770, titleDefinition)
+
+    pdf.setFont("Times-Bold", 10)
+    pdf.drawString(40, 740, voiceTitle)
+
+    text = pdf.beginText(40, 720)
+    text.setFont("Courier", 6)
+    text.setFillColor(colors.black)
+    text.leading = 24
+    for line in voiceTextLines:
+        text.textLine(line)
+        text.textLine("")
+    pdf.drawText(text)
+
+    pdf.setFont("Courier-BoldOblique", 8)
+    pdf.drawString(40, 500, "Findings")
+
+    voiceResult = "Not Detected"
+    pdf.setFont("Courier", 6)
+    pdf.drawString(40, 490, f"Disease is {voiceResult} based on the auditory input.")
+    pdf.showPage()
+
+    # Page 3
+    pdf.setFillColorRGB(0.58,0.10,0.00)
+    pdf.setFont("Courier-BoldOblique", 20)
+    pdf.drawCentredString(300, 800, title)
+
+    pdf.setFillColor(colors.black)
+    pdf.setFont("Courier", 10)
+    pdf.drawString(80, 770, titleDefinition)
+
+    pdf.setFont("Times-Bold", 10)
+    pdf.drawString(40, 740, spiralResult)
+
+    pdf.drawInlineImage(image, 130, 300)
+
+    pdf.setFont("Courier-BoldOblique", 8)
+    pdf.drawString(40, 180, "Findings")
+
+    voiceResult = "Not Detected"
+    pdf.setFont("Courier", 6)
+    pdf.drawString(40, 170, f"Disease is {voiceResult} based on the image input.")
+    pdf.showPage()
+
+    # saving the pdf
+    pdf.save()
+
     with open(fileName, 'rb') as resultFile:
         return send_file(resultFile, attachment_filename=fileName)
 
