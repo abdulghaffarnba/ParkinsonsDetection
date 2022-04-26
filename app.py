@@ -245,33 +245,33 @@ def result():
     voiceTitle = 'Voice Detection Result'
     spiralResult = 'Spiral Detection Result'
     questionnaireTextLines = [
-        'Do you have any slow movement in your limbs, face, walking, or overall body?                                                               No',
-        'Do you have a tremor, or shaking, in one of your limbs, most commonly your hand or fingers?                                                No',
-        'Do you have muscle stiffness that is both unpleasant and limits your range of motion?                                                      No',
-        'Do you find yourself losing your sense of balance?                                                                                         No',
-        'Have you noticed a lack of automatic movements such as blinking, smiling, or swinging your arms as you walk?                               No',
-        'Do you have a problem with your sense of smell                                                                                             No',
-        'Do you have difficulties sleeping and find yourself thrashing around in bed or acting out nightmares while you are deeply asleep?          No',
-        'Have others commented on how soft your voice is or how hoarse you sound?                                                                   No',
-        'Have you ever been told that you have a serious, depressed, or enraged expression on your face, even when you are not upset?               No',
-        'Do you find yourself feeling dizzy when you get out of a seat?                                                                             No'
+        f'{questions[0]["question"]}                                                               No',
+        f'{questions[1]["question"]}                                                No',
+        f'{questions[2]["question"]}                                                      No',
+        f'{questions[3]["question"]}                                                                                         No',
+        f'{questions[4]["question"]}                               No',
+        f'{questions[5]["question"]}                                                                                             No',
+        f'{questions[6]["question"]}          No',
+        f'{questions[7]["question"]}                                                                   No',
+        f'{questions[8]["question"]}               No',
+        f'{questions[9]["question"]}                                                                             No'
     ]
 
     voiceTextLines = [
-        'Jitter Local                                                0',
-        'Jitter (Abs)                                                0',
-        'Jitter RAP                                                  0',
-        'Jitter PPQ5                                                 0',
-        'Jitter DDP                                                  0',
-        'Shimmer local                                               0',
-        'Shimmer local db                                            0',
-        'Shimmer apq3                                                0',
-        'Shimmer aqpq5                                               0',
-        'Shimmer aqpq11                                              0',
-        'Shimmer DDA                                                 0',
-        'HNR 05                                                      0',
-        'HNR 15                                                      0',
-        'HNR 25                                                      0'
+        f'Jitter Local                                                {localJitter_list[0]}',
+        f'Jitter (Abs)                                                {localabsoluteJitter_list[0]}',
+        f'Jitter RAP                                                  {rapJitter_list[0]}',
+        f'Jitter PPQ5                                                 {ppq5Jitter_list[0]}',
+        f'Jitter DDP                                                  {ddpJitter_list[0]}',
+        f'Shimmer local                                               {localShimmer_list[0]}',
+        f'Shimmer local db                                            {localdbShimmer_list[0]}',
+        f'Shimmer apq3                                                {apq3Shimmer_list[0]}',
+        f'Shimmer aqpq5                                               {aqpq5Shimmer_list[0]}',
+        f'Shimmer aqpq11                                              {apq11Shimmer_list[0]}',
+        f'Shimmer DDA                                                 {ddaShimmer_list[0]}',
+        f'HNR 05                                                      {hnr05_list[0]}',
+        f'HNR 15                                                      {hnr15_list[0]}',
+        f'HNR 25                                                      {hnr25_list[0]}'
     ]
 
     image = 'D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/SpiralDrawing/testing_parkinsons.png'
