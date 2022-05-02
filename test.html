@@ -1,0 +1,29 @@
+<1DOCTYPE html>
+<html>
+    <body>
+        <form action="http://127.0.0.1:5000/questionnaire" method="get">
+            <input type="submit" value="get questionnaire">
+        </form>
+        <form action="http://127.0.0.1:5000/questionnaire" method="post">
+            <input type = "hidden" name="question" id="question"/>
+            <input type="submit" value="post questionnaire">
+        </form>
+        <form action="http://127.0.0.1:5000/voice" method="post">
+            <label for="myfile">Select a audio file:</label>
+            <input type="file" id="myfile" name="myfile"><br><br>
+            <input type="submit">
+        </form>
+        <form action="http://127.0.0.1:5000/spiral" method="post">
+            <label for="myfile">Select a spiral file:</label>
+            <input type="file" id="myfile" name="myfile"><br><br>
+            <input type="submit">
+        </form>
+        <a href="http://127.0.0.1:5000/result"><button class='btn btn-default'>Download</button></a>
+
+        <script>
+            document.getElementById("question").value = ["yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes"];
+      
+            // question.value = ["yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes"];
+        </script>
+    </body>
+</html>

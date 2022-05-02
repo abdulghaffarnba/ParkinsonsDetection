@@ -174,6 +174,7 @@ def voice():
         return redirect(request.url)
 
     audioFile = request.files["file"]
+    audioFile.save
     if audioFile.filename == "":
         return redirect(request.url)
     
