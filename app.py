@@ -246,16 +246,16 @@ def result():
     voiceTitle = 'Voice Detection Result'
     spiralResult = 'Spiral Detection Result'
     questionnaireTextLines = [
-        f'{questions[0]["question"]}                                                               No',
-        f'{questions[1]["question"]}                                                No',
-        f'{questions[2]["question"]}                                                      No',
-        f'{questions[3]["question"]}                                                                                         No',
-        f'{questions[4]["question"]}                               No',
-        f'{questions[5]["question"]}                                                                                             No',
-        f'{questions[6]["question"]}          No',
-        f'{questions[7]["question"]}                                                                   No',
-        f'{questions[8]["question"]}               No',
-        f'{questions[9]["question"]}                                                                             No'
+        f'{questions[0]["question"]}                                                               {resultQuestionnaire[0]}',
+        f'{questions[1]["question"]}                                                {resultQuestionnaire[1]}',
+        f'{questions[2]["question"]}                                                      {resultQuestionnaire[2]}',
+        f'{questions[3]["question"]}                                                                                         {resultQuestionnaire[3]}',
+        f'{questions[4]["question"]}                               {resultQuestionnaire[4]}',
+        f'{questions[5]["question"]}                                                                                             {resultQuestionnaire[5]}',
+        f'{questions[6]["question"]}          {resultQuestionnaire[6]}',
+        f'{questions[7]["question"]}                                                                   {resultQuestionnaire[7]}',
+        f'{questions[8]["question"]}               {resultQuestionnaire[8]}',
+        f'{questions[9]["question"]}                                                                             {resultQuestionnaire[9]}'
     ]
 
     voiceTextLines = [
@@ -307,7 +307,14 @@ def result():
     pdf.setFont("Courier-BoldOblique", 8)
     pdf.drawString(40, 570, "Findings")
 
+    # result percentage of questionnaire
     percent = 0
+    for result in resultQuestionnaire:
+        if result == 'yes':
+            percent = percent + 10
+        elif result == 'sometimes':
+            percent = percent + 5
+        
     pdf.setFont("Courier", 6)
     pdf.drawString(40, 560, f"{percent}% has been detected from the questionnaire")
     pdf.showPage()
