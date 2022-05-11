@@ -19,6 +19,8 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+base_dir = "C:/Users/DELL/Desktop/Repos/abdul-fyp"
+
 # Questionnaire List
 resultQuestionnaire = []
 questions = [{
@@ -196,7 +198,7 @@ def voice():
     hnr25_list.append(hnr25)
 
     # Loading the Model
-    with open("D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/Audio/VoiceModel.pkl", 'rb') as audioFile:  
+    with open(base_dir + "/ParkinsonsDetection/Audio/VoiceModel.pkl", 'rb') as audioFile:  
         model = pickle.load(audioFile)
 
     input_data = (roundOffInputValues(localJitter_list[0]), roundOffInputValues(localabsoluteJitter_list[0]), roundOffInputValues(rapJitter_list[0]), roundOffInputValues(ppq5Jitter_list[0]), roundOffInputValues(ddpJitter_list[0]), roundOffInputValues(localShimmer_list[0]), roundOffInputValues(localdbShimmer_list[0]), roundOffInputValues(apq3Shimmer_list[0]), roundOffInputValues(aqpq5Shimmer_list[0]), roundOffInputValues(apq11Shimmer_list[0]), roundOffInputValues(ddaShimmer_list[0]), roundOffInputValues(hnr05_list[0]), roundOffInputValues(hnr15_list[0]), roundOffInputValues(hnr25_list[0]))
@@ -377,4 +379,5 @@ def result():
         return send_file(resultFile, attachment_filename=fileName)
 
 if __name__ == '__main__':
-    app.run()
+    # app.run()
+    app.run(debug=True, host='127.0.0.1', port=4001)
