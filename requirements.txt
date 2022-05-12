@@ -1,2 +1,2 @@
 pydub
-xgboost
+xgboost==1.5.2

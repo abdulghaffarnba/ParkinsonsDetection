@@ -1,3 +1,4 @@
+from cmath import e, log
 import json
 import pickle
 import cv2
@@ -28,6 +29,10 @@ base_dir = "C:/Users/DELL/Desktop/Repos/abdul-fyp"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 file_uploads_path = os.path.join(basedir, './uploads/')
+
+audio_model_path = os.path.join(basedir, './Audio/VoiceModel.pkl')
+spiral_model_path = os.path.join(basedir, './SpiralDrawing/SpiralModel.pkl')
+resultFile = os.path.join(basedir, './ParkD_Result.pdf')
 
 
 # Questionnaire List
@@ -217,7 +222,7 @@ def test_voice():
     # sound = parselmouth.Sound(
     #     'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav')
 
-    # pydub.AudioSegment.converter = os.getcwd() + "\\ffmpeg.exe"
+    # pydub.AudioSegment.converter = os.getcwd() + "/\ffmpeg.exe"
     # pydub.AudioSegment.ffprobe = os.getcwd() + "\\ffprobe.exe"
     # sound = pydub.AudioSegment.from_mp3(os.getcwd()+"\\sample.mp3")
 
@@ -226,9 +231,8 @@ def test_voice():
     # sound.export(
     #     'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.wav', format="wav")
 
-
     sound = parselmouth.Sound(
-        'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/healthy.wav')
+        "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio_converted.wav")
 
     (localJitter, localabsoluteJitter, rapJitter, ppq5Jitter, ddpJitter, localShimmer, localdbShimmer, apq3Shimmer,
      aqpq5Shimmer, apq11Shimmer, ddaShimmer, hnr05, hnr15, hnr25) = measurePitch(sound, 75, 1000, "Hertz")
@@ -248,12 +252,12 @@ def test_voice():
     hnr25_list.append(hnr25)
 
     # Loading the Model
-    with open(base_dir + "/ParkinsonsDetection/Audio/VoiceModel.pkl", 'rb') as audioFile:
+    with open(audio_model_path, 'rb') as audioFile:
         model = pickle.load(audioFile)
 
     input_data = (roundOffInputValues(localJitter_list[0]), roundOffInputValues(localabsoluteJitter_list[0]), roundOffInputValues(rapJitter_list[0]), roundOffInputValues(ppq5Jitter_list[0]), roundOffInputValues(ddpJitter_list[0]), roundOffInputValues(localShimmer_list[0]), roundOffInputValues(
         localdbShimmer_list[0]), roundOffInputValues(apq3Shimmer_list[0]), roundOffInputValues(aqpq5Shimmer_list[0]), roundOffInputValues(apq11Shimmer_list[0]), roundOffInputValues(ddaShimmer_list[0]), roundOffInputValues(hnr05_list[0]), roundOffInputValues(hnr15_list[0]), roundOffInputValues(hnr25_list[0]))
-
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", input_data)
     # Converting the data to numpy array
     input_data_array = np.asarray(input_data)
 
@@ -262,11 +266,15 @@ def test_voice():
 
     # Scaling the features
     scale = MinMaxScaler((-1, 1))  # (-1,1)
+    standardize_input_data = scale.fit_transform(reshape_input_data)
+    model_prediction = model.predict(standardize_input_data)
+    print(model_prediction)
 
     # Standardizing the input data
-    standardize_input_data = scale.transform(reshape_input_data)
+    # standardize_input_data = scale.transform(reshape_input_data)
+    # print(standardize_input_data)
 
-    print('reshape_input_data', reshape_input_data)
+    # print('reshape_input_data', reshape_input_data)
 
     return jsonify({"status": "ok"})
 
@@ -287,11 +295,7 @@ def voice():
     file_type = split_filename[1]
 
     file_save = file_uploads_path + 'recorded_audio.' + file_type
-    print('file_save', file_save)
-
-    if not os.path.exists(file_uploads_path):
-        print("file directory not exists")
-        os.makedirs(file_uploads_path)
+    print('file_save_mp3', file_save)
 
     file_save_path = os.path.join(
         file_uploads_path, 'recorded_audio.' + file_type)
@@ -299,60 +303,68 @@ def voice():
     converted_file_path = os.path.join(
         file_uploads_path, 'recorded_audio_converted.wav')
 
-    # save the file into the uploads folder
-    audioFile.save(file_save_path)
-    print('file_uploads_path', file_uploads_path)
+    try:
+        # save the file into the uploads folder
+        audioFile.save(file_save_path)
+        print('file_uploads_path', file_uploads_path)
 
-    subprocess.call(['ffmpeg', '-i', file_save_path,
-                     "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav"])
+        subprocess.call(['ffmpeg', '-i', file_save_path,
+                        converted_file_path])
 
-    # sound = AudioSegment.from_mp3("C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav")
-    # sound.export(converted_file_path, format="wav")
+        sound = parselmouth.Sound(
+            converted_file_path)
 
-    sound = parselmouth.Sound(
-        'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav')
+        (localJitter, localabsoluteJitter, rapJitter, ppq5Jitter, ddpJitter, localShimmer, localdbShimmer, apq3Shimmer,
+         aqpq5Shimmer, apq11Shimmer, ddaShimmer, hnr05, hnr15, hnr25) = measurePitch(sound, 75, 1000, "Hertz")
+        localJitter_list.append(localJitter)  # make a mean F0 list
+        localabsoluteJitter_list.append(
+            localabsoluteJitter)  # make a sd F0 list
+        rapJitter_list.append(rapJitter)
+        ppq5Jitter_list.append(ppq5Jitter)
+        localShimmer_list.append(localShimmer)
+        localdbShimmer_list.append(localdbShimmer)
+        apq3Shimmer_list.append(apq3Shimmer)
+        aqpq5Shimmer_list.append(aqpq5Shimmer)
+        apq11Shimmer_list.append(apq11Shimmer)
+        ddaShimmer_list.append(ddaShimmer)
+        ddpJitter_list.append(ddpJitter)
+        hnr05_list.append(hnr05)
+        hnr15_list.append(hnr15)
+        hnr25_list.append(hnr25)
 
-    (localJitter, localabsoluteJitter, rapJitter, ppq5Jitter, ddpJitter, localShimmer, localdbShimmer, apq3Shimmer,
-     aqpq5Shimmer, apq11Shimmer, ddaShimmer, hnr05, hnr15, hnr25) = measurePitch(sound, 75, 1000, "Hertz")
-    localJitter_list.append(localJitter)  # make a mean F0 list
-    localabsoluteJitter_list.append(localabsoluteJitter)  # make a sd F0 list
-    rapJitter_list.append(rapJitter)
-    ppq5Jitter_list.append(ppq5Jitter)
-    localShimmer_list.append(localShimmer)
-    localdbShimmer_list.append(localdbShimmer)
-    apq3Shimmer_list.append(apq3Shimmer)
-    aqpq5Shimmer_list.append(aqpq5Shimmer)
-    apq11Shimmer_list.append(apq11Shimmer)
-    ddaShimmer_list.append(ddaShimmer)
-    ddpJitter_list.append(ddpJitter)
-    hnr05_list.append(hnr05)
-    hnr15_list.append(hnr15)
-    hnr25_list.append(hnr25)
+        print(localJitter)
 
-    # Loading the Model
-    with open(base_dir + "/ParkinsonsDetection/Audio/VoiceModel.pkl", 'rb') as audioFile:
-        model = pickle.load(audioFile)
+        # Loading the Model
+        with open(audio_model_path, 'rb') as audioFile:
+            model = pickle.load(audioFile)
 
-    input_data = (roundOffInputValues(localJitter_list[0]), roundOffInputValues(localabsoluteJitter_list[0]), roundOffInputValues(rapJitter_list[0]), roundOffInputValues(ppq5Jitter_list[0]), roundOffInputValues(ddpJitter_list[0]), roundOffInputValues(localShimmer_list[0]), roundOffInputValues(
-        localdbShimmer_list[0]), roundOffInputValues(apq3Shimmer_list[0]), roundOffInputValues(aqpq5Shimmer_list[0]), roundOffInputValues(apq11Shimmer_list[0]), roundOffInputValues(ddaShimmer_list[0]), roundOffInputValues(hnr05_list[0]), roundOffInputValues(hnr15_list[0]), roundOffInputValues(hnr25_list[0]))
+        input_data = (roundOffInputValues(localJitter_list[0]), roundOffInputValues(localabsoluteJitter_list[0]), roundOffInputValues(rapJitter_list[0]), roundOffInputValues(ppq5Jitter_list[0]), roundOffInputValues(ddpJitter_list[0]), roundOffInputValues(localShimmer_list[0]), roundOffInputValues(
+            localdbShimmer_list[0]), roundOffInputValues(apq3Shimmer_list[0]), roundOffInputValues(aqpq5Shimmer_list[0]), roundOffInputValues(apq11Shimmer_list[0]), roundOffInputValues(ddaShimmer_list[0]), roundOffInputValues(hnr05_list[0]), roundOffInputValues(hnr15_list[0]), roundOffInputValues(hnr25_list[0]))
 
-    # Converting the data to numpy array
-    input_data_array = np.asarray(input_data)
+        # Converting the data to numpy array
+        input_data_array = np.asarray(input_data)
 
-    # Reshaping the array
-    reshape_input_data = input_data_array.reshape(1, -1)
+        # Reshaping the array
+        reshape_input_data = input_data_array.reshape(1, -1)
 
-    # Scaling the features
-    # scale = MinMaxScaler((-1, 1))  # (-1,1)
+        # Scaling the features
+        scale = MinMaxScaler((-1, 1))  # (-1,1)
 
-    # Standardizing the input data
-    # standardize_input_data = scale.transform(reshape_input_data)
+        # Standardizing the input data
+        standardize_input_data = scale.fit_transform(reshape_input_data)
 
-    print('reshape_input_data', reshape_input_data)
+        print('reshape_input_data', reshape_input_data)
 
-    # Predicting
-    # model_prediction = model.predict(standardize_input_data)
-    # voiceStatus_list.append(model_prediction)
+        print('audio_model_path', audio_model_path)
+
+        # Predicting
+        model_prediction = model.predict(standardize_input_data)
+        voiceStatus_list.append(model_prediction)
+
+    except Exception as e:
+        print(e)
+
+    os.remove(converted_file_path)
 
     return jsonify({"status": "ok"})
 
@@ -361,23 +373,41 @@ def voice():
 
 @app.route('/spiral', methods=["POST"])
 def spiral():
+    print('request.files', request.files)
+    # todo >>>>>> get audio from the request and pass to "sound" below
+    # if "file" not in request.files:
+    # return redirect(request.url)
+
+    audioFile = request.files["file"]
+
+    file_name = audioFile.filename
+    file_type = "jpeg"
+
+    file_save = file_uploads_path + 'spiral_image.' + file_type
+    print('file_image', file_save)
+
+    file_save_path = os.path.join(
+        file_uploads_path, 'spiral_image.' + file_type)
+
+    audioFile.save(file_save_path)
+
     # Loading the Model
-    with open("D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/SpiralDrawing/SpiralModel.pkl", 'rb') as file:
+    with open(spiral_model_path, 'rb') as file:
         model = pickle.load(file)
     # todo >>>>>> get image from the request and pass to "prediction" below
-    imagefile = request.files.get('imagefile', '')
-
+    imagefile = os.path.join(basedir, './uploads/spiral_image.jpeg')
     prediction = spiralPredictionProcess(model, imagefile)
     spiralResult.append(prediction)
+    print("result - appended")
 
-    return jsonify({"Endpoint": "/result"})
+    return jsonify({"status": "ok"})
 
 # Reult Endpoint
 
 
 @app.route('/result', methods=["GET"])
 def result():
-    # todo >>>>>> create PDF as report
+    # # todo >>>>>> create PDF as report
     fileName = 'ParkD_Result.pdf'
     documentTitle = 'Result'
     title = 'ParkD'
@@ -386,6 +416,9 @@ def result():
     questionnaireTitle = 'Questionnaire Result'
     voiceTitle = 'Voice Detection Result'
     spiralResult = 'Spiral Detection Result'
+
+    print('resultQuestionnaire', resultQuestionnaire)
+
     questionnaireTextLines = [
         f'{questions[0]["question"]}                                                               {resultQuestionnaire[0]}',
         f'{questions[1]["question"]}                                                {resultQuestionnaire[1]}',
@@ -416,7 +449,8 @@ def result():
         f'HNR 25                                                      {hnr25_list[0]}'
     ]
 
-    image = 'D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/SpiralDrawing/testing_parkinsons.png'
+    image = os.path.join(basedir, './uploads/spiral_image.jpeg')
+    # image = 'D:/STUDIES/FINAL YEAR/FYP/IMPLEMENTATION/ParkinsonsDetection/SpiralDrawing/testing_parkinsons.png'
 
     # creating a pdf object
     pdf = canvas.Canvas(fileName)
@@ -517,10 +551,9 @@ def result():
     # saving the pdf
     pdf.save()
 
-    with open(fileName, 'rb') as resultFile:
-        return send_file(resultFile, attachment_filename=fileName)
+    return send_file(resultFile, attachment_filename=fileName,mimetype='application/pdf')
 
 
 if __name__ == '__main__':
     # app.run()
-    app.run(debug=True, host='127.0.0.1', port=4001)
+    app.run(debug=False, host='127.0.0.1', port=4001)
