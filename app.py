@@ -518,7 +518,11 @@ def result():
     pdf.setFont("Courier-BoldOblique", 8)
     pdf.drawString(40, 500, "Findings")
 
-    voiceResult = "Not Detected"
+    voiceResult = ""
+    if voiceResult[0] == 0.:
+        voiceResult = "Not Detected"
+    else:
+        voiceResult = "Detected"
     pdf.setFont("Courier", 6)
     pdf.drawString(
         40, 490, f"Disease is {voiceResult} based on the auditory input.")
@@ -536,15 +540,19 @@ def result():
     pdf.setFont("Times-Bold", 10)
     pdf.drawString(40, 740, spiralResult)
 
-    pdf.drawInlineImage(image, 130, 300)
+    pdf.drawInlineImage(image, 130, 250)
 
     pdf.setFont("Courier-BoldOblique", 8)
     pdf.drawString(40, 180, "Findings")
 
-    voiceResult = "Not Detected"
+    spiralResult = ""
+    if spiralResult[0] == "Healthy":
+        spiralResult = "Not Detected"
+    else:
+        spiralResult = "Detected"
     pdf.setFont("Courier", 6)
     pdf.drawString(
-        40, 170, f"Disease is {voiceResult} based on the image input.")
+        40, 170, f"Disease is {spiralResult} based on the image input.")
     pdf.showPage()
 
     # saving the pdf
