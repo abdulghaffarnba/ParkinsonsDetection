@@ -25,7 +25,6 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-base_dir = "C:/Users/DELL/Desktop/Repos/abdul-fyp"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 file_uploads_path = os.path.join(basedir, './uploads/')
@@ -551,7 +550,7 @@ def result():
     # saving the pdf
     pdf.save()
 
-    return send_file(resultFile, attachment_filename=fileName,mimetype='application/pdf')
+    return send_file(resultFile, attachment_filename=fileName, mimetype='application/pdf')
 
 
 if __name__ == '__main__':
