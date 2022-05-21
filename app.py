@@ -188,9 +188,9 @@ def spiralPredictionProcess(model, imagePath):
 def home():
     return questions
 
+
+
 # Questionnaire Endpoint
-
-
 @app.route('/questionnaire', methods=["GET", "POST"])
 def questionnaire():
     if request.method == 'POST':
@@ -203,81 +203,81 @@ def questionnaire():
     else:
         return jsonify({'Questions': questions, "status": 'ok'})
 
+# @app.route('/test-voice', methods=["GET"])
+# def test_voice():
+
+#     # given_audio = AudioSegment.from_file("C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.mp3", format="mp3")
+#     # subprocess.call(['ffmpeg', '-i', "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.mp3",
+#     #                  "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav"])
+
+#     # sound = AudioSegment.from_mp3(
+#     #     './uploads/recorded_audio.mp3')
+#     # sound = AudioSegment.from_mp3("C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.mp3")
+#     # sound.export("C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recordedss.wav", format="wav")
+
+#     # sound = parselmouth.Sound(
+#     #     'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav')
+
+#     # pydub.AudioSegment.converter = os.getcwd() + "/\ffmpeg.exe"
+#     # pydub.AudioSegment.ffprobe = os.getcwd() + "\\ffprobe.exe"
+#     # sound = pydub.AudioSegment.from_mp3(os.getcwd()+"\\sample.mp3")
+
+#     # sound = AudioSegment.from_mp3(
+#     #     'C:/Users/DELL/Downloads/12-hans_zimmer-time.mp3')
+#     # sound.export(
+#     #     'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.wav', format="wav")
+
+#     sound = parselmouth.Sound(
+#         "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio_converted.wav")
+
+#     (localJitter, localabsoluteJitter, rapJitter, ppq5Jitter, ddpJitter, localShimmer, localdbShimmer, apq3Shimmer,
+#      aqpq5Shimmer, apq11Shimmer, ddaShimmer, hnr05, hnr15, hnr25) = measurePitch(sound, 75, 1000, "Hertz")
+#     localJitter_list.append(localJitter)  # make a mean F0 list
+#     localabsoluteJitter_list.append(localabsoluteJitter)  # make a sd F0 list
+#     rapJitter_list.append(rapJitter)
+#     ppq5Jitter_list.append(ppq5Jitter)
+#     localShimmer_list.append(localShimmer)
+#     localdbShimmer_list.append(localdbShimmer)
+#     apq3Shimmer_list.append(apq3Shimmer)
+#     aqpq5Shimmer_list.append(aqpq5Shimmer)
+#     apq11Shimmer_list.append(apq11Shimmer)
+#     ddaShimmer_list.append(ddaShimmer)
+#     ddpJitter_list.append(ddpJitter)
+#     hnr05_list.append(hnr05)
+#     hnr15_list.append(hnr15)
+#     hnr25_list.append(hnr25)
+
+#     # Loading the Model
+#     with open(audio_model_path, 'rb') as audioFile:
+#         model = pickle.load(audioFile)
+
+#     input_data = (roundOffInputValues(localJitter_list[0]), roundOffInputValues(localabsoluteJitter_list[0]), roundOffInputValues(rapJitter_list[0]), roundOffInputValues(ppq5Jitter_list[0]), roundOffInputValues(ddpJitter_list[0]), roundOffInputValues(localShimmer_list[0]), roundOffInputValues(
+#         localdbShimmer_list[0]), roundOffInputValues(apq3Shimmer_list[0]), roundOffInputValues(aqpq5Shimmer_list[0]), roundOffInputValues(apq11Shimmer_list[0]), roundOffInputValues(ddaShimmer_list[0]), roundOffInputValues(hnr05_list[0]), roundOffInputValues(hnr15_list[0]), roundOffInputValues(hnr25_list[0]))
+#     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", input_data)
+#     # Converting the data to numpy array
+#     input_data_array = np.asarray(input_data)
+
+#     # Reshaping the array
+#     reshape_input_data = input_data_array.reshape(1, -1)
+
+#     # Scaling the features
+#     scale = MinMaxScaler((-1, 1))  # (-1,1)
+#     standardize_input_data = scale.fit_transform(reshape_input_data)
+#     model_prediction = model.predict(standardize_input_data)
+#     print(model_prediction)
+
+#     # Standardizing the input data
+#     # standardize_input_data = scale.transform(reshape_input_data)
+#     # print(standardize_input_data)
+
+#     # print('reshape_input_data', reshape_input_data)
+
+#     return jsonify({"status": "ok"})
+
+
+
+
 # Voice Endpoint
-
-
-@app.route('/test-voice', methods=["GET"])
-def test_voice():
-
-    # given_audio = AudioSegment.from_file("C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.mp3", format="mp3")
-    # subprocess.call(['ffmpeg', '-i', "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.mp3",
-    #                  "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav"])
-
-    # sound = AudioSegment.from_mp3(
-    #     './uploads/recorded_audio.mp3')
-    # sound = AudioSegment.from_mp3("C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.mp3")
-    # sound.export("C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recordedss.wav", format="wav")
-
-    # sound = parselmouth.Sound(
-    #     'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/test.wav')
-
-    # pydub.AudioSegment.converter = os.getcwd() + "/\ffmpeg.exe"
-    # pydub.AudioSegment.ffprobe = os.getcwd() + "\\ffprobe.exe"
-    # sound = pydub.AudioSegment.from_mp3(os.getcwd()+"\\sample.mp3")
-
-    # sound = AudioSegment.from_mp3(
-    #     'C:/Users/DELL/Downloads/12-hans_zimmer-time.mp3')
-    # sound.export(
-    #     'C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio.wav', format="wav")
-
-    sound = parselmouth.Sound(
-        "C:/Users/DELL/Desktop/Repos/abdul-fyp/ParkinsonsDetection/uploads/recorded_audio_converted.wav")
-
-    (localJitter, localabsoluteJitter, rapJitter, ppq5Jitter, ddpJitter, localShimmer, localdbShimmer, apq3Shimmer,
-     aqpq5Shimmer, apq11Shimmer, ddaShimmer, hnr05, hnr15, hnr25) = measurePitch(sound, 75, 1000, "Hertz")
-    localJitter_list.append(localJitter)  # make a mean F0 list
-    localabsoluteJitter_list.append(localabsoluteJitter)  # make a sd F0 list
-    rapJitter_list.append(rapJitter)
-    ppq5Jitter_list.append(ppq5Jitter)
-    localShimmer_list.append(localShimmer)
-    localdbShimmer_list.append(localdbShimmer)
-    apq3Shimmer_list.append(apq3Shimmer)
-    aqpq5Shimmer_list.append(aqpq5Shimmer)
-    apq11Shimmer_list.append(apq11Shimmer)
-    ddaShimmer_list.append(ddaShimmer)
-    ddpJitter_list.append(ddpJitter)
-    hnr05_list.append(hnr05)
-    hnr15_list.append(hnr15)
-    hnr25_list.append(hnr25)
-
-    # Loading the Model
-    with open(audio_model_path, 'rb') as audioFile:
-        model = pickle.load(audioFile)
-
-    input_data = (roundOffInputValues(localJitter_list[0]), roundOffInputValues(localabsoluteJitter_list[0]), roundOffInputValues(rapJitter_list[0]), roundOffInputValues(ppq5Jitter_list[0]), roundOffInputValues(ddpJitter_list[0]), roundOffInputValues(localShimmer_list[0]), roundOffInputValues(
-        localdbShimmer_list[0]), roundOffInputValues(apq3Shimmer_list[0]), roundOffInputValues(aqpq5Shimmer_list[0]), roundOffInputValues(apq11Shimmer_list[0]), roundOffInputValues(ddaShimmer_list[0]), roundOffInputValues(hnr05_list[0]), roundOffInputValues(hnr15_list[0]), roundOffInputValues(hnr25_list[0]))
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", input_data)
-    # Converting the data to numpy array
-    input_data_array = np.asarray(input_data)
-
-    # Reshaping the array
-    reshape_input_data = input_data_array.reshape(1, -1)
-
-    # Scaling the features
-    scale = MinMaxScaler((-1, 1))  # (-1,1)
-    standardize_input_data = scale.fit_transform(reshape_input_data)
-    model_prediction = model.predict(standardize_input_data)
-    print(model_prediction)
-
-    # Standardizing the input data
-    # standardize_input_data = scale.transform(reshape_input_data)
-    # print(standardize_input_data)
-
-    # print('reshape_input_data', reshape_input_data)
-
-    return jsonify({"status": "ok"})
-
-
 @app.route('/voice', methods=["POST"])
 def voice():
 
@@ -367,9 +367,9 @@ def voice():
 
     return jsonify({"status": "ok"})
 
+
+
 # Spiral Endpoint
-
-
 @app.route('/spiral', methods=["POST"])
 def spiral():
     print('request.files', request.files)
@@ -401,9 +401,9 @@ def spiral():
 
     return jsonify({"status": "ok"})
 
+
+
 # Reult Endpoint
-
-
 @app.route('/result', methods=["GET"])
 def result():
     # # todo >>>>>> create PDF as report
