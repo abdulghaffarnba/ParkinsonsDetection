@@ -519,7 +519,7 @@ def result():
     pdf.drawString(40, 500, "Findings")
 
     voiceResult = ""
-    if voiceResult[0] == 0.:
+    if voiceStatus_list[0] == 0.:
         voiceResult = "Not Detected"
     else:
         voiceResult = "Detected"
@@ -545,14 +545,14 @@ def result():
     pdf.setFont("Courier-BoldOblique", 8)
     pdf.drawString(40, 180, "Findings")
 
-    spiralResult = ""
+    spiral_result_tag = ""
     if spiralResult[0] == "Healthy":
-        spiralResult = "Not Detected"
+        spiral_result_tag = "Not Detected"
     else:
-        spiralResult = "Detected"
+        spiral_result_tag = "Detected"
     pdf.setFont("Courier", 6)
     pdf.drawString(
-        40, 170, f"Disease is {spiralResult} based on the image input.")
+        40, 170, f"Disease is {spiral_result_tag} based on the image input.")
     pdf.showPage()
 
     # saving the pdf
