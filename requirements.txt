@@ -1,2 +1,9 @@
 pydub
 xgboost==1.5.2
+praat-parselmouth
+Flask
+Flask-Cors
+scikit-learn
+scikit-image
+reportlab
+pandas

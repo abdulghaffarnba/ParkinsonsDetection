@@ -414,7 +414,7 @@ def result():
 
     questionnaireTitle = 'Questionnaire Result'
     voiceTitle = 'Voice Detection Result'
-    spiralResult = 'Spiral Detection Result'
+    spiralResultTitle = 'Spiral Detection Result'
 
     print('resultQuestionnaire', resultQuestionnaire)
 
@@ -519,7 +519,7 @@ def result():
     pdf.drawString(40, 500, "Findings")
 
     voiceResult = ""
-    if voiceResult[0] == 0.:
+    if voiceStatus_list[0] == 0.:
         voiceResult = "Not Detected"
     else:
         voiceResult = "Detected"
@@ -538,21 +538,21 @@ def result():
     pdf.drawString(80, 770, titleDefinition)
 
     pdf.setFont("Times-Bold", 10)
-    pdf.drawString(40, 740, spiralResult)
+    pdf.drawString(40, 740, spiralResultTitle)
 
     pdf.drawInlineImage(image, 130, 250)
 
     pdf.setFont("Courier-BoldOblique", 8)
     pdf.drawString(40, 180, "Findings")
 
-    spiralResult = ""
+    spiralResultValue = ""
     if spiralResult[0] == "Healthy":
-        spiralResult = "Not Detected"
+        spiralResultValue = "Not Detected"
     else:
-        spiralResult = "Detected"
+        spiralResultValue = "Detected"
     pdf.setFont("Courier", 6)
     pdf.drawString(
-        40, 170, f"Disease is {spiralResult} based on the image input.")
+        40, 170, f"Disease is {spiralResultValue} based on the image input.")
     pdf.showPage()
 
     # saving the pdf
